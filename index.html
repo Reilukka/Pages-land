@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CINE SLIP BR — Acesso Ilimitado a Filmes, Séries e TV ao Vivo</title>
+  <meta name="description" content="Assista a mais de 60.000 conteúdos e 700 canais de TV ao vivo com a CINE SLIP BR. Filmes, séries, esportes e muito mais. Teste grátis e suporte via WhatsApp." />
+  <style>
+    :root{
+      --bg:#060d13; --card:#0d1e2b; --accent:#25d366; --accent-dark:#128c7e; --gold:#ffcc00; --muted:#98a6b3;
+      --glass: rgba(255,255,255,0.04);
+      --shadow-soft: 0 4px 15px rgba(0,0,0,0.1);
+      --shadow-hard: 0 10px 40px rgba(0,0,0,0.4);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;background:var(--bg);color:#fff}
+
+    /* PRELOADER */
+    #preloader{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s}
+    .loader{width:90px;height:90px;border-radius:12px;background:var(--card);display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:var(--shadow-hard)}
+    .loader .dot{width:14px;height:14px;border-radius:50%;background:var(--accent);animation:jump .8s infinite ease-in-out}
+    .loader .dot:nth-child(2){animation-delay:.15s}
+    .loader .dot:nth-child(3){animation-delay:.3s}
+    @keyframes jump{0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(6,13,19,.9),rgba(6,13,19,.6));backdrop-filter:blur(6px);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:700}
+    .brand .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#ff9800);display:flex;align-items:center;justify-content:center;color:#07121a;font-size:24px}
+    .nav-links{display:flex;gap:14px;align-items:center}
+    .nav-links a{color:#cfe6da;text-decoration:none;font-weight:600}
+    .cta-small{background:var(--accent);color:#002;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700;box-shadow:var(--shadow-soft);transition:transform .2s}
+    .cta-small:hover{transform:translateY(-2px)}
+
+    /* HERO */
+    .hero{position:relative;height:70vh;min-height:400px;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center}
+    .hero video{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:180%;height:120%;object-fit:cover;filter:brightness(.55);}
+    .hero .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,13,19,.15),rgba(6,13,19,.75));z-index:2}
+    .hero-content{position:relative;z-index:3;padding:20px;max-width:900px}
+    .hero h1{font-size:clamp(28px, 5vw, 64px);margin:0;color:#fff;text-shadow:0 4px 10px rgba(0,0,0,0.5)}
+    .hero h1 span{color:var(--gold)}
+    .hero p{margin:10px 0 20px;color:var(--muted);font-size:clamp(16px, 2.5vw, 22px);line-height:1.5}
+    .hero-cta-buttons{margin-top:24px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+    .hero .cta{background:var(--accent);color:#002;padding:14px 28px;border-radius:12px;font-weight:800;text-decoration:none;transition:transform .18s, background .18s}
+    .hero .cta:hover{transform:translateY(-4px);background:var(--accent-dark)}
+    .hero .secondary-cta{background:transparent;border:2px solid rgba(255,255,255,.2);padding:12px 24px;border-radius:10px;color:var(--muted);text-decoration:none;transition:border-color .2s}
+    .hero .secondary-cta:hover{border-color:var(--gold);color:#fff}
+
+    .stats{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:30px}
+    .stat{background:var(--glass);padding:14px 22px;border-radius:12px;text-align:center;box-shadow:var(--shadow-soft)}
+    .stat strong{display:block;font-size:24px;color:var(--gold);font-weight:700}
+    .stat span{font-size:14px;color:var(--muted);white-space:nowrap}
+
+    /* CONTAINER */
+    .container{max-width:1200px;margin:40px auto;padding:0 20px}
+    
+    /* SECTION HEADINGS */
+    .section-title{text-align:center;margin-bottom:30px}
+    .section-title h2{font-size:clamp(22px, 4vw, 36px);color:#fff;margin-bottom:8px}
+    .section-title p{color:var(--muted);font-size:16px}
+
+    /* FEATURES */
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+    .feature-card{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.05);box-shadow:var(--shadow-soft)}
+    .feature-card h3{margin:0 0 10px;color:var(--gold)}
+    .feature-card p{margin:0;color:var(--muted)}
+
+    /* CARDS */
+    .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+    .card{background:linear-gradient(180deg,#0b2130,#06141b);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s}
+    .card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,.6)}
+    .thumb{width:100%;height:260px;object-fit:cover;display:block}
+    .card-meta{padding:14px}
+    .card-meta h4{margin:0 0 6px;font-size:16px}
+    .card-meta p{margin:0;color:var(--muted);font-size:13px}
+
+    /* VIDEO DEMO */
+    .video-wrap{text-align:center;margin-top:40px}
+    .video-wrap video{width:100%;max-width:1100px;border-radius:12px;border:6px solid rgba(255,255,255,.05);box-shadow:var(--shadow-hard)}
+
+    /* COMPARATIVE / PRICE */
+    .price-compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+    .price-card{background:linear-gradient(180deg,#071826,#0b2a3a);padding:24px;border-radius:12px;text-align:center;border:1px solid rgba(255,255,255,0.05);box-shadow:var(--shadow-hard)}
+    .price-card.highlight{border-color:var(--gold);background:linear-gradient(180deg,rgba(37,211,102,.1),rgba(18,140,126,.1))}
+    .price-card h3{font-size:18px;color:var(--muted);margin-bottom:4px}
+    .price-card strong{font-size:40px;color:var(--gold);display:block;margin-top:8px}
+    .price-card p{font-size:14px;color:var(--muted);margin-top:6px}
+    .price-card .icon-compare{font-size:24px;margin-bottom:12px}
+    .price-card .icon-compare.wrong{color:#ff4d4f}
+    .price-card .icon-compare.correct{color:var(--accent)}
+
+    /* TESTIMONIALS */
+    .testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:20px}
+    .testimonial-card{background:linear-gradient(180deg,#08151b,#061018);padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.05)}
+    .testimonial-card .quote{color:#fff;font-style:italic;line-height:1.5;margin-bottom:12px}
+    .testimonial-card .author{display:flex;align-items:center;gap:10px;color:var(--gold)}
+    .testimonial-card .author .avatar{width:40px;height:40px;border-radius:50%;background-size:cover;background-position:center;box-shadow:0 0 5px rgba(0,0,0,0.4)}
+    
+    /* FAQ */
+    .faq-item{background:var(--card);padding:16px;border-radius:10px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.05)}
+    .faq-item strong{color:#fff}
+    .faq-item p{color:var(--muted);margin-top:6px;font-size:15px}
+
+    /* FOOTER */
+    footer{padding:30px 20px;text-align:center;color:var(--muted);border-top:1px solid rgba(255,255,255,0.05)}
+
+    /* FLOATING WHATSAPP BUTTON */
+    .whats{position:fixed;right:20px;bottom:20px;width:64px;height:64px;border-radius:50%;background:linear-gradient(180deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;color:#002;font-size:28px;z-index:60;box-shadow:var(--shadow-hard);animation:float 2.4s ease-in-out infinite}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .hero{height:60vh;min-height:320px}
+      .thumb{height:180px}
+      .price-compare-grid{grid-template-columns:1fr}
+      .whats{width:56px;height:56px;font-size:24px}
+      .nav-links{display:none}
+      .nav-links.active{display:flex}
+    }
+  </style>
+</head>
+<body>
+
+  <div id="preloader"><div class="loader"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+
+  <nav>
+    <div class="brand">
+      <div class="logo">CS</div>
+      <div>
+        <div style="font-size:16px;font-weight:700">CINE SLIP BR</div>
+        <div style="font-size:12px;color:var(--muted);">Tudo em 1 — Filmes, Séries e TV ao Vivo</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <a href="#conteudo">Conteúdo</a>
+      <a href="#planos">Planos</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a class="cta-small" href="https://wa.me/5568992816582?text=Ol%C3%A1%2C%20quero%20um%20teste%20gr%C3%A1tis." target="_blank" rel="noopener noreferrer">Fale no WhatsApp</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <video autoplay muted loop playsinline poster="imagens/hero-poster.jpg">
+      <source src="videos/hero.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+      <h1>Assista a tudo, pague pouco. <span>CINE SLIP BR: Seu streaming completo.</span></h1>
+      <p>Filmes, séries, esportes, animes e mais de 700 canais ao vivo. O que você procura, nós temos.</p>
+      <div class="hero-cta-buttons">
+        <a class="cta" href="https://wa.me/5568992816582?text=Quero%20meu%20teste%20gr%C3%A1tis%20agora%20mesmo!" target="_blank" rel="noopener noreferrer">QUERO TESTE GRÁTIS</a>
+        <a class="secondary-cta" href="#conteudo">VER CONTEÚDO</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong id="count-contents">0</strong><span>Conteúdos</span></div>
+        <div class="stat"><strong>+700</strong><span>Canais Ao Vivo</span></div>
+        <div class="stat"><strong>24/7</strong><span>Suporte Premium</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <section id="recursos">
+      <div class="section-title">
+        <h2>Por que escolher a CINE SLIP BR?</h2>
+        <p>Experiência de streaming superior em todos os seus dispositivos.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Qualidade Cinematográfica</h3>
+          <p>Assista em HD, Full HD e 4K. Sem travamentos, sem interrupções. Imagem e som perfeitos.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Biblioteca Ilimitada</h3>
+          <p>Milhares de filmes, séries e animes. Sempre atualizado com os últimos lançamentos.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Compatibilidade Total</h3>
+          <p>Funciona em Smart TVs, celulares, notebooks e tablets. Assista onde e quando quiser.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Suporte Rápido</h3>
+          <p>Atendimento exclusivo via WhatsApp para resolver qualquer dúvida ou problema.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="conteudo" style="margin-top:50px">
+      <div class="section-title">
+        <h2>Conteúdos em Destaque</h2>
+        <p>Atualizamos semanalmente com o que há de melhor no mundo do cinema e das séries.</p>
+      </div>
+      <div class="card-grid">
+        <div class="card"><img class="thumb" src="img/filme.jpg" alt="Filme em destaque"><div class="card-meta"><h4>Filme Top</h4><p>Lançamento em alta</p></div></div>
+        <div class="card"><img class="thumb" src="img/filme2.jpg" alt="Série em destaque"><div class="card-meta"><h4>Série em Destaque</h4><p>Temporada completa</p></div></div>
+        <div class="card"><img class="thumb" src="img/anime1.jpg" alt="Anime clássico"><div class="card-meta"><h4>Anime Clássico</h4><p>Legendado e dublado</p></div></div>
+        <div class="card"><img class="thumb" src="img/esporte1.jpg" alt="Eventos esportivos"><div class="card-meta"><h4>Esportes Ao Vivo</h4><p>Futebol, MMA e mais</p></div></div>
+      </div>
+    </section>
+
+    <section class="video-wrap">
+      <h2>Assista ao Trailer e Veja a Qualidade</h2>
+      <video controls playsinline poster="imagens/trailer-poster.jpg">
+        <source src="videos/trailer.mp4" type="video/mp4">
+        Seu navegador não suporta a reprodução de vídeo.
+      </video>
+    </section>
+
+    <section id="planos" style="margin-top:50px">
+      <div class="section-title">
+        <h2>Economia e Vantagem: Compare</h2>
+        <p>Por que pagar por vários serviços se você pode ter tudo em um?</p>
+      </div>
+      <div class="price-compare-grid">
+        <div class="price-card">
+          <div class="icon-compare wrong">❌</div>
+          <h3>Serviços Separados</h3>
+          <p>Netflix + Prime + TV a cabo + etc.</p>
+          <strong>R$ 150 / mês</strong>
+          <p>Custo estimado para ter acesso a tudo.</p>
+        </div>
+        <div class="price-card highlight">
+          <div class="icon-compare correct">✅</div>
+          <h3>CINE SLIP BR — Completo</h3>
+          <p>Mais de 60.000 conteúdos + Canais Ao Vivo</p>
+          <strong>R$ 19,99 / mês</strong>
+          <p>Acesso total, sem pagar a mais por nada.</p>
+          <div style="margin-top:16px"><a class="cta" href="https://wa.me/5568992816582?text=Quero%20testar%20agora%20o%20plano%20CINE%20SLIP%20BR" target="_blank" rel="noopener noreferrer">QUERO TESTAR AGORA</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:50px">
+      <div class="section-title">
+        <h2>O que nossos clientes dizem</h2>
+        <p>A satisfação deles é nossa prioridade.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="quote">"Excelente custo-benefício! O catálogo é imenso e a qualidade de imagem é perfeita. Troquei todos os meus serviços pelo CINE SLIP BR."</div>
+          <div class="author"><div class="avatar" style="background-image: url('https://randomuser.me/api/portraits/men/32.jpg')"></div>Lucas</div>
+        </div>
+        <div class="testimonial-card">
+          <div class="quote">"Finalmente encontrei um serviço que não trava! Assisto a jogos de futebol e filmes sem nenhuma interrupção. O suporte via WhatsApp é um diferencial."</div>
+          <div class="author"><div class="avatar" style="background-image: url('https://randomuser.me/api/portraits/women/44.jpg')"></div>Mariana</div>
+        </div>
+        <div class="testimonial-card">
+          <div class="quote">"Simples de usar e a instalação foi super rápida. Fui atendido de forma ágil e consegui assistir ao que queria em minutos. Recomendo muito!"</div>
+          <div class="author"><div class="avatar" style="background-image: url('https://randomuser.me/api/portraits/men/22.jpg')"></div>João</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="duvidas" style="margin-top:50px">
+      <div class="section-title">
+        <h2>Dúvidas Frequentes</h2>
+      </div>
+      <div>
+        <div class="faq-item"><strong>Como eu instalo o CINE SLIP BR?</strong><p>É muito fácil! Após o contato, enviamos um link e um passo-a-passo detalhado via WhatsApp para você instalar em seu aparelho.</p></div>
+        <div class="faq-item"><strong>Posso assistir na minha Smart TV?</strong><p>Sim. A CINE SLIP BR é compatível com a maioria das Smart TVs (Samsung, LG, TCL, etc.), além de celulares, computadores, tablets e outros dispositivos.</p></div>
+        <div class="faq-item"><strong>É um serviço seguro?</strong><p>Com certeza. Nosso serviço é 100% seguro. Não coletamos dados pessoais e a comunicação para teste e pagamento é feita de forma privada via WhatsApp.</p></div>
+      </div>
+    </section>
+
+  </div>
+
+  <a class="whats" id="whatsBtn" href="https://wa.me/5568992816582?text=Ol%C3%A1%2C%20quero%20um%20teste%20gr%C3%A1tis%20agora!" target="_blank" rel="noopener noreferrer">💬</a>
+
+  <footer>
+    <div style="max-width:1100px;margin:auto">© 2025 CINE SLIP BR — Atendimento e suporte via WhatsApp.</div>
+  </footer>
+
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => { document.getElementById('preloader').style.opacity = '0'; setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 500); }, 700); });
+    function animateCount(id, to, duration = 1800) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      let start = 0;
+      const startTime = performance.now();
+      function tick(now) {
+        const progress = (now - startTime) / duration;
+        const val = Math.floor(progress * to);
+        el.textContent = (val >= to ? to : val).toLocaleString('pt-BR');
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    animateCount('count-contents', 60000);
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }));
+  </script>
+</body>
+</html>
